@@ -1,10 +1,52 @@
 version: "3"
 
 services:
+  mariadb:
+    container_name: mariadb
+    build: 
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - '3306:3306'
+
+  wordpress:
+    container_name: wordpress
+    build: 
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - XXX:/var/www/html
+    depends_on:
+      - mariadb
+    environment:
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+    ports:
+      - '9000:9000'
+      - '3306:3306'
+
   nginx:
-      restart: always
-      build:
-        dockerfile: Dockerfile.dev
-        context: ./nginx
-      ports:
-        - '9000:443'
+    container_name: nginx
+    build: 
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - XXX:/var/www/html
+      - nginx:/etc/nginx/conf.d
+    ports:
+        - '443:443'
+        - '9000:9000'

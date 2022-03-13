@@ -4,8 +4,9 @@ FROM debian:buster
 ENV DEBIAN_FRONTEND=noninteractive
 
 # install of nginx with -y option
-RUN apt-get update \
-	&& apt-get upgrade -y \
+RUN apt-get -y install curl gnupg2 ca-certificates lsb-release debian-archive-keyring \
+	&& apt-get -y update \
+	&& apt-get -y upgrade \
 	&& apt-get -y install nginx
 
 # Container must listen on 443 port according to subjects
