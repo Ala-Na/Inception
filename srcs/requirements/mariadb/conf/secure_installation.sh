@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Mainly inspired from https://github.com/MariaDB/mariadb-docker/ official image 10.2
+# Mainly inspired and simplified from https://github.com/MariaDB/mariadb-docker/ official image 10.2
 # Adjustments principally from https://bertvv.github.io/notes-to-self/2015/11/16/automating-mysql_secure_installation/
 # and http://txt.fliglio.com/2013/11/creating-a-mysql-docker-container/
 
