@@ -1,4 +1,5 @@
 # From https://github.com/NEKuipers/Inception
+# Another help ressource : https://github-com.translate.goog/SavchenkoDV/inception_School21_Ecole42?_x_tr_sl=auto&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=wapp
 
 
 "i'm so glad they got rid of ft_services, how bad can the replacement project be?"
