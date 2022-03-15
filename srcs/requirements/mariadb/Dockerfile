@@ -25,12 +25,15 @@ RUN apt-get -y update \
 	find /etc/mysql/ -name '*.cnf' -print0 \
 	| xargs -0 grep -lZE '^(bind-address|log|user\s)' \
 	| xargs -rt -0 sed -Ei 's/^(bind-address|log|user\s)/#&/'; \
-	# correct issue of directories reading order
-	if [ ! -L /etc/mysql/my.cnf ]; then sed -i -e '/includedir/i[mariadb]\nskip-host-cache\nskip-name-resolve\n' /etc/mysql/my.cnf; \
-	else sed -i -e '/includedir/ {N;s/\(.*\)\n\(.*\)/[mariadbd]\nskip-host-cache\nskip-name-resolve\n\n\2\n\1/}' \
-                /etc/mysql/mariadb.cnf; fi
+	# correct issue of directories reading order according to mariadb official docker image
+	if [ ! -L /etc/mysql/my.cnf ]; then \
+		sed -i -e '/includedir/i[mariadb]\nskip-host-cache\nskip-name-resolve\n' /etc/mysql/my.cnf; \
+	else \
+		sed -i -e '/includedir/ {N;s/\(.*\)\n\(.*\)/[mariadbd]\nskip-host-cache\nskip-name-resolve\n\n\2\n\1/}' \
+                /etc/mysql/mariadb.cnf; \
+	fi
 
-COPY tools/secure_installation.sh /tmp/secure_installation.sh
+COPY conf/secure_installation.sh /tmp/secure_installation.sh
 
 # Container default port must be exposed
 # No effect if port is not exposed at container creation
