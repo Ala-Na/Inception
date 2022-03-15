@@ -6,7 +6,7 @@ services:
     build: 
       context: ./requirements/mariadb
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
     volumes:
       - mariadb:/var/lib/mysql
     environment:
@@ -22,7 +22,7 @@ services:
     build: 
       context: ./requirements/wordpress
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
     volumes:
       - XXX:/var/www/html
     depends_on:
@@ -43,7 +43,7 @@ services:
     build: 
       context: ./requirements/nginx
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
     volumes:
       - XXX:/var/www/html
       - nginx:/etc/nginx/conf.d
