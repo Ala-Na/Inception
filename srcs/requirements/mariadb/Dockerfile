@@ -1,4 +1,6 @@
 # Mainly inspired from https://github.com/MariaDB/mariadb-docker 10.2
+# Adjustments from https://mariadb.com/kb/en/creating-a-custom-docker-image/
+# and https://sysdig.com/blog/dockerfile-best-practices/
 
 FROM debian:buster
 
@@ -6,7 +8,6 @@ FROM debian:buster
 ENV DEBIAN_FRONTEND=noninteractive
 
 # creation of new group and user mysql to avoid rootless container
-# https://sysdig.com/blog/dockerfile-best-practices/
 RUN groupadd -r mysql && useradd -r -g mysql mysql
 
 # install of mariadb with -y option and recreate files with correct permissions
