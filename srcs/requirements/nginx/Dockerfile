@@ -35,14 +35,20 @@ COPY nginx/ssl /etc/nginx/ssl
 COPY nginx/snippets /etc/nginx/snippets
 COPY nginx/sites-available /etc/nginx/sites-available
 
+# https://faun.pub/setting-up-ssl-certificates-for-nginx-in-docker-environ-e7eec5ebb418
+RUN mkdir -p /etc/nginx/certs
+
 # For option explainations : https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
 # and https://codingwithmanny.medium.com/configure-self-signed-ssl-for-nginx-docker-from-a-scratch-7c2bcd5478c6
 # TODO generate openssl certificate and key, modify paths
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /path/for/key -out /path/for/certificate \
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs -out /etc/nginx/certs \
 	-subj "/C=FR/ST=Ile-de-France/L=Paris/O=42-Paris/OU=Inception project/CN=anadege"
 
 # note : call penssl dhparam could help to make e Diffie-Hellman group, which is used in Perfect Forward Secrecy
 # protocols. but it can take up to a few minutes.
+
+# https://faun.pub/setting-up-ssl-certificates-for-nginx-in-docker-environ-e7eec5ebb418
+COPY /conf/nginx.conf /etc/nginx/conf.d/nginx.conf
 
 # Container must listen on 443 port according to subjects
 # It can be overide by docker run -p option
