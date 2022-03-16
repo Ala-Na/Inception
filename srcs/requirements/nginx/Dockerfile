@@ -1,13 +1,37 @@
+# Mainly inspired and simplified from https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-docker/
+# Adjustments from https://www.novixys.com/blog/nginx-inside-docker-ubuntu-howto/
+
+
 FROM debian:buster
 
 # prevent package from prompting interactive input
 ENV DEBIAN_FRONTEND=noninteractive
 
+# make defaut root folder of web server
+RUN mkdir -p /var/www/html
+WORKDIR /var/www/html
+
+## creation of new group and user nginx to avoid rootless container
+RUN groupadd -r nginx && useradd -r -g nginx nginx;
+	chown -R nginx /var/www/html
+
 # install of nginx with -y option
-RUN apt-get -y install curl gnupg2 ca-certificates lsb-release debian-archive-keyring \
+# openssl need to be installed to to use TSL1.2 or TSL1.3 protocol
+RUN apt-get -y install curl gnupg1 ca-certificates lsb-release debian-archive-keyring \
 	&& apt-get -y update \
 	&& apt-get -y upgrade \
-	&& apt-get -y install nginx
+	&& apt-get -y install nginx openssl
+
+# remove unneeded files
+RUN rm -f /etc/nginx/fastcgi.conf /etc/nginx/fastcgi_params \
+	&& rm -f /etc/nginx/snippets/fastcgi_php.conf
+
+# copy https files from build to correct image path
+COPY nginx/ssl /etc/nginx/ssl
+COPY nginx/snippets /etc/nginx/snippets
+COPY nginx/sites-available /etc/nginx/sites-available
+
+# TODO generate openssl certificate and key
 
 # Container must listen on 443 port according to subjects
 # It can be overide by docker run -p option
