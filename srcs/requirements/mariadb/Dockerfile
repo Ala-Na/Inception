@@ -22,7 +22,7 @@ RUN apt-get -y update \
 	chown -R mysql:mysql /var/lib/mysql /var/run/mysqld; \
 	chmod 777 /var/run/mysqld; \
 	# comment bind-address which can be problematic
-	# bind address is set such as server only listen to localhost
+	# bind address is set such as server only listen to localhost by default
 	find /etc/mysql/ -name '*.cnf' -print0 \
 	| xargs -0 grep -lZE '^(bind-address|log|user\s)' \
 	| xargs -rt -0 sed -Ei 's/^(bind-address|log|user\s)/#&/'; \
