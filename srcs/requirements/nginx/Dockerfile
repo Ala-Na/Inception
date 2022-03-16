@@ -9,6 +9,7 @@ FROM debian:buster
 ENV DEBIAN_FRONTEND=noninteractive
 
 # make defaut root folder of web server
+# TODO maybe delete ?
 RUN mkdir -p /var/www/html
 WORKDIR /var/www/html
 
@@ -24,10 +25,12 @@ RUN apt-get -y install curl gnupg1 ca-certificates lsb-release debian-archive-ke
 	&& apt-get -y install nginx openssl
 
 # remove unneeded files
+# TODO maybe delete ?
 RUN rm -f /etc/nginx/fastcgi.conf /etc/nginx/fastcgi_params \
 	&& rm -f /etc/nginx/snippets/fastcgi_php.conf
 
 # copy https files from build to correct image path
+# TODO maybe delete ?
 COPY nginx/ssl /etc/nginx/ssl
 COPY nginx/snippets /etc/nginx/snippets
 COPY nginx/sites-available /etc/nginx/sites-available
@@ -36,7 +39,7 @@ COPY nginx/sites-available /etc/nginx/sites-available
 # and https://codingwithmanny.medium.com/configure-self-signed-ssl-for-nginx-docker-from-a-scratch-7c2bcd5478c6
 # TODO generate openssl certificate and key, modify paths
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /path/for/key -out /path/for/certificate \
-	-subj "/C=FR/ST=Ile-de-France/L=Paris/O=42 Paris/OU=Inception project/CN=anadege"
+	-subj "/C=FR/ST=Ile-de-France/L=Paris/O=42-Paris/OU=Inception project/CN=anadege"
 
 
 # Container must listen on 443 port according to subjects
