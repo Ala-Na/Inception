@@ -1,11 +1,25 @@
 # https://wiki.alpinelinux.org/wiki/WordPress
+# https://howto.wared.fr/installation-wordpress-ubuntu-nginx/
+# https://www.cyberciti.biz/faq/how-to-install-php-7-fpm-on-alpine-linux/
+# https://github.com/docker-library/wordpress/blob/master/Dockerfile.template
+# https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose
+# https://make.wordpress.org/cli/handbook/guides/installing/
 
 FROM alpine:3.14
 
 RUN apk update \
-&& apk upgrade \
-&& apk add ighttpd php7-common php7-session php7-iconv \
-php7-json php7-gd php7-curl php7-xml php7-mysqli php7-imap \
-php7-cgi fcgi php7-pdo php7-pdo_mysql php7-soap php7-xmlrpc \
-php7-posix php7-mcrypt php7-gettext php7-ldap php7-ctype \
-php7-dom php7-simplexml
+	&& apk upgrade \
+	# installation of php submodules needed and other needed modules
+	&& apk add curl php7-fpm php7-cli php7-curl php7-gd php7-intl php7-zlib php7-mysqli; \
+	# installation of wordpress
+	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+	&& chmod +x wp-cli.phar \
+	&& mv wp-cli.phar /usr/bin/wp
+
+# create a user for wordpress
+RUN adduser wordpress \
+	&& addgroup wordpress \
+	&& chown -R wordpress:wordpress /var/www/wordpress \
+	&& chmod -R o-rwx /var/www/wordpress
+
+WORKDIR /var/www/wordpress
