@@ -1,19 +1,17 @@
 # Mainly inspired and simplified from https://github.com/MariaDB/mariadb-docker 10.2
 # Adjustments from https://mariadb.com/kb/en/creating-a-custom-docker-image/
 # and https://sysdig.com/blog/dockerfile-best-practices/
+# and https://wiki.alpinelinux.org/wiki/MariaDB
 
-FROM debian:buster
-
-# prevent package from prompting interactive input
-ENV DEBIAN_FRONTEND=noninteractive
+FROM alpine:3.14
 
 # creation of new group and user mysql to avoid rootless container
-RUN groupadd -r mysql && useradd -r -g mysql mysql
+RUN adduser -D -g 'mysql' mysql
 
-# install of mariadb with -y option and recreate files with correct permissions
-RUN apt-get -y update \
-	&& apt-get -y upgrade \
-	&& apt-get -y install vim mariadb-server mariadb-client; \
+# install of mariadb server and recreate files with correct permissions
+RUN apk update \
+	&& apk upgrade \
+	&& apk add vim mariadb; \
 	rm -rf /var/lib/apt/lists/*; \
 	# note that /var/lib/mysql is the fault directory where MySQL by default will write its data files
 	rm -rf /var/lib/mysql; \
@@ -24,15 +22,10 @@ RUN apt-get -y update \
 	# comment bind-address which can be problematic
 	# bind address is set such as server only listen to localhost by default
 	find /etc/mysql/ -name '*.cnf' -print0 \
-	| xargs -0 grep -lZE '^(bind-address|log|user\s)' \
+	| xargs -0 grep -lE '^(bind-address|log|user\s)' \
 	| xargs -rt -0 sed -Ei 's/^(bind-address|log|user\s)/#&/'; \
-	# correct issue of directories reading order according to mariadb official docker image
-	if [ ! -L /etc/mysql/my.cnf ]; then \
-		sed -i -e '/includedir/i[mariadb]\nskip-host-cache\nskip-name-resolve\n' /etc/mysql/my.cnf; \
-	else \
-		sed -i -e '/includedir/ {N;s/\(.*\)\n\(.*\)/[mariadbd]\nskip-host-cache\nskip-name-resolve\n\n\2\n\1/}' \
-                /etc/mysql/mariadb.cnf; \
-	fi
+	sed -i "s|.*skip-networking.*|skip-networking|g" /etc/mysql/my.cnf ; \
+	sed -i "s|.*skip-networking.*|skip-networking|g" /etc/my.cnf.d/mariadb-server.cnf
 
 COPY conf/secure_installation.sh /tmp/secure_installation.sh
 
