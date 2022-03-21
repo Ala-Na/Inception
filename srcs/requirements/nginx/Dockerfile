@@ -9,7 +9,8 @@
 
 FROM alpine:3.14
 
-RUN mkdir -p /var/www/html
+RUN set -e; \
+	mkdir -p /var/www/html
 
 RUN adduser -D -g 'nginx' nginx; \
 	chown -R nginx:nginx /var/www/html

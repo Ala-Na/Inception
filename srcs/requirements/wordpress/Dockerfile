@@ -1,25 +1,39 @@
+# Real image : https://github.com/docker-library/wordpress/blob/master/Dockerfile.template
+# Alpine fpm version : https://github.com/docker-library/wordpress/blob/master/beta/php7.4/fpm-alpine/Dockerfile
 # https://wiki.alpinelinux.org/wiki/WordPress
 # https://howto.wared.fr/installation-wordpress-ubuntu-nginx/
 # https://www.cyberciti.biz/faq/how-to-install-php-7-fpm-on-alpine-linux/
 # https://github.com/docker-library/wordpress/blob/master/Dockerfile.template
 # https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose
 # https://make.wordpress.org/cli/handbook/guides/installing/
+# https://blog.linoproject.net/the-making-of-wordpress-docker-image/
 
 FROM alpine:3.14
 
-RUN apk update \
+RUN set -e; \
+	apk update \
 	&& apk upgrade \
 	# installation of php submodules needed and other needed modules
-	&& apk add curl php7-fpm php7-cli php7-curl php7-gd php7-intl php7-zlib php7-mysqli; \
+	&& apk add bash curl php7-fpm php7-cli php7-curl php7-gd php7-intl php7-zlib php7-mysqli; \
 	# installation of wordpress
 	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& chmod +x wp-cli.phar \
 	&& mv wp-cli.phar /usr/bin/wp
 
 # create a user for wordpress
-RUN adduser wordpress \
-	&& addgroup wordpress \
+RUN adduser -D -g 'wordpress' wordpress\
+	&& mkdir -p /var/www/wordpress \
 	&& chown -R wordpress:wordpress /var/www/wordpress \
 	&& chmod -R o-rwx /var/www/wordpress
 
+# Copy needed configuration file (www.conf to give www instructions and wp-config to configurate wp)
+# TODO fix next line or file associated
+#COPY /conf/www.conf /etc/php7/php-fpm.conf
+COPY /conf/wp-config-docker.php /var/www/wordpress/wp-config-docker.php
+
+
 WORKDIR /var/www/wordpress
+
+EXPOSE 9000
+
+CMD ["php-fpm7", "--nodaemonize"]
