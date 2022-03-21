@@ -14,7 +14,7 @@ RUN set -e; \
 	apk update \
 	&& apk upgrade \
 	# installation of php submodules needed and other needed modules
-	&& apk add bash curl php7-fpm php7-cli php7-curl php7-gd php7-intl php7-zlib php7-mysqli; \
+	&& apk add bash curl php-fpm php-cli php-curl php-gd php-intl php-zlib php-mysqli; \
 	# installation of wordpress
 	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& chmod +x wp-cli.phar \
@@ -28,9 +28,8 @@ RUN adduser -D -g 'wordpress' wordpress\
 
 # Copy needed configuration file (www.conf to give www instructions and wp-config to configurate wp)
 # TODO fix next line or file associated
-#COPY /conf/www.conf /etc/php7/php-fpm.conf
+#COPY /conf/www.conf /etc/php7/php-fpm.d/
 COPY /conf/wp-config-docker.php /var/www/wordpress/wp-config-docker.php
-
 
 WORKDIR /var/www/wordpress
 
