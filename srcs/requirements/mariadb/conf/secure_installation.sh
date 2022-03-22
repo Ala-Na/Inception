@@ -20,6 +20,8 @@ UPDATE mysql.user SET Password=PASSWORD(${MYSQL_ROOT_PWD}) WHERE User='root';
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 
+# TODO use variable MYSQL_USER and MYSQL_PASSWORD
+
 DROP DATABASE test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%';
 

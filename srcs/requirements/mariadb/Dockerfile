@@ -7,7 +7,7 @@ FROM alpine:3.14
 
 # creation of new group and user mysql to avoid rootless container
 RUN set -e; \
-	adduser -D -g 'mysql' mysql
+	adduser -D -g ${MYSQL_ROOT_USER} ${MY_SQL_ROOT_USER}
 
 # install of mariadb server and recreate files with correct permissions
 RUN apk update \

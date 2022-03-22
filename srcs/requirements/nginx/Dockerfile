@@ -5,7 +5,6 @@
 # and http://www.w3big.com/fr/docker/docker-install-nginx.html
 # and https://faun.pub/setting-up-ssl-certificates-for-nginx-in-docker-environ-e7eec5ebb418
 # For openssl explanations : https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
-# and https://codingwithmanny.medium.com/configure-self-signed-ssl-for-nginx-docker-from-a-scratch-7c2bcd5478c6
 
 FROM alpine:3.14
 
