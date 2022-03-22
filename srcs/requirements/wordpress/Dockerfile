@@ -26,9 +26,9 @@ RUN adduser -D -g 'wordpress' wordpress\
 	&& chown -R wordpress:wordpress /var/www/wordpress \
 	&& chmod -R o-rwx /var/www/wordpress
 
-# Copy needed configuration file (www.conf to give www instructions and wp-config to configurate wp)
-# TODO fix next line or file associated
-#COPY /conf/www.conf /etc/php7/php-fpm.d/
+# Copy needed configuration file
+# (www.conf to give instructions to set www poll and wp-config to configurate wp)
+COPY /conf/www.conf /etc/php7/php-fpm.d/
 COPY /conf/wp-config-docker.php /var/www/wordpress/wp-config-docker.php
 
 WORKDIR /var/www/wordpress
