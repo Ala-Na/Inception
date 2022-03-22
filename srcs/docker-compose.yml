@@ -57,6 +57,11 @@ services:
     networks:
       - frontend
 
-  networks:
-    frontend:
-    backend:
+networks:
+  frontend:
+  backend:
+
+volumes:
+  db:
+  nginx:
+  wordpress:
