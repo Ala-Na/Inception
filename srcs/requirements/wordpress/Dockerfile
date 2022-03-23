@@ -21,7 +21,7 @@ RUN set -e; \
 	&& mv wp-cli.phar /usr/bin/wp
 
 # create a user for wordpress
-RUN adduser -D -g 'wordpress' wordpress\
+RUN adduser -Dg 'wordpress' wordpress\
 	&& mkdir -p /var/www/wordpress \
 	&& chown -R wordpress:wordpress /var/www/wordpress \
 	&& chmod -R o-rwx /var/www/wordpress
@@ -33,6 +33,9 @@ COPY /conf/wp-config-docker.php /var/www/wordpress/wp-config-docker.php
 
 WORKDIR /var/www/wordpress
 
+COPY conf/entrypoint.sh /tmp/entrypoint.sh
+
 EXPOSE 9000
 
-CMD ["php-fpm7", "--nodaemonize"]
+# go to entrypoint to wait for mariadb
+ENTRYPOINT [ "sh", "/tmp/entrypoint.sh"]
