@@ -7,7 +7,7 @@ FROM alpine:3.14
 
 # creation of new group and user mysql to avoid rootless container
 RUN set -e; \
-	adduser -D -g ${MYSQL_ROOT_USER} ${MY_SQL_ROOT_USER}
+	adduser -D -g 'mysql' mysql
 
 # install of mariadb server and recreate files with correct permissions
 RUN apk update \
@@ -25,8 +25,11 @@ RUN apk update \
 	find /etc/mysql/ -name '*.cnf' -print0 \
 	| xargs -0 grep -lE '^(bind-address|log|user\s)' \
 	| xargs -rt -0 sed -Ei 's/^(bind-address|log|user\s)/#&/'; \
-	sed -i "s|.*skip-networking.*|skip-networking|g" /etc/mysql/my.cnf ; \
-	sed -i "s|.*skip-networking.*|skip-networking|g" /etc/my.cnf.d/mariadb-server.cnf
+	# comment skip-networking directives which make localhost by default as port
+	sed -i "s|.*skip-networking.*|# skip-networking|g" /etc/my.cnf ; \
+	sed -i "s|.*skip-networking.*|# skip-networking|g" /etc/my.cnf.d/mariadb-server.cnf ; \
+	# set listening port to 3306 and not 0 by default
+	sed -i 's/port\s*=\s*3306/port = 3406/' /etc/my.cnf
 
 COPY conf/secure_installation.sh /tmp/secure_installation.sh
 
