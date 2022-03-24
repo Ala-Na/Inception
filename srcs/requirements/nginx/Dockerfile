@@ -11,8 +11,8 @@ FROM alpine:3.14
 RUN set -e; \
 	mkdir -p /var/www/html
 
-#RUN adduser -D -g 'nginx' nginx; \
-#	chown -R nginx:nginx /var/www/html
+RUN adduser -D -g 'nginx' nginx; \
+	chown -R nginx:nginx /var/www/html
 
 
 # install of nginx with -y option

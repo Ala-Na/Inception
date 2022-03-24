@@ -5,6 +5,10 @@
 # using wildcard function to check if /etc/hosts already modified
 # source : https://stackoverflow.com/questions/5553352/how-do-i-check-if-file-exists-in-makefile-so-i-can-delete-it
 all :
+	@ sudo mkdir -p /home/anadege42/data
+	@ sudo mkdir -p /home/anadege42/data/wordpress
+	@ sudo mkdir -p /home/anadege42/data/nginx
+	@ sudo mkdir -p /home/anadege42/data/db
 	@ if ! cat /etc/hosts | grep '127.0.0.1 anadege.42.fr'; then \
 		echo "127.0.0.1 anadege.42.fr" >> /etc/hosts; \
 	fi

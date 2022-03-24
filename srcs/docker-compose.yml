@@ -63,5 +63,23 @@ networks:
 
 volumes:
   db:
+    name: mariadb_volume
+    driver: local
+    driver_opts:
+      o: bind
+      type: volume
+      device: '/home/anadege42/data/db'
   nginx:
+    name: nginx_volume
+    driver: local
+    driver_opts:
+      o: bind
+      type: volume
+      device: '/home/anadege42/data/nginx'
   wordpress:
+    name: wordpress_volume
+    driver: local
+    driver_opts:
+      o: bind
+      type: volume
+      device: '/home/anadege42/data/wordpress'

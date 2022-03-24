@@ -14,22 +14,26 @@ RUN set -e; \
 	apk update \
 	&& apk upgrade \
 	# installation of php submodules needed and other needed modules
-	&& apk add bash curl php-fpm php-cli php-curl php-gd php-intl php-zlib php-mysqli; \
+	&& apk add bash curl php-json php-phar php-fpm php-cli php-curl php-gd php-intl php-zlib php-mysqli; \
 	# installation of wordpress
-	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-	&& chmod +x wp-cli.phar \
-	&& mv wp-cli.phar /usr/bin/wp
+	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --silent\
+	&& chmod +x wp-cli.phar 
+	
+RUN mv wp-cli.phar /usr/bin/wp
 
-# create a user for wordpress
-RUN adduser -Dg 'wordpress' wordpress\
-	&& mkdir -p /var/www/wordpress \
-	&& chown -R wordpress:wordpress /var/www/wordpress \
-	&& chmod -R o-rwx /var/www/wordpress
+
+## create a user for wordpress
+#RUN adduser -Dg www-data wordpress\
+#	&& mkdir -p /var/www/wordpress \
+#	&& chown -R wordpress:www-data /var/www/wordpress \
+#	&& chmod -R o-rwx /var/www/wordpress
+
+RUN wp core download
 
 # Copy needed configuration file
 # (www.conf to give instructions to set www poll and wp-config to configurate wp)
 COPY /conf/www.conf /etc/php7/php-fpm.d/
-COPY /conf/wp-config-docker.php /var/www/wordpress/wp-config-docker.php
+COPY conf/wp-config-docker.php /conf/wp-config.php
 
 WORKDIR /var/www/wordpress
 

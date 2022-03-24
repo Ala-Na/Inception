@@ -16,7 +16,7 @@ fi
 # secure installation
 # TODO fix password and maybe create database ?
 mysqld --user=mysql << _EOF_
-UPDATE mysql.user SET Password=PASSWORD(${MYSQL_ROOT_PWD}) WHERE User='root';
+UPDATE mysql.user SET Password=PASSWORD('psswd') WHERE User='root';
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 
@@ -28,4 +28,4 @@ DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%';
 FLUSH PRIVILEGES;
 _EOF_
 
-exec /usr/bin/mysqld_safe --user=mysql
+exec /usr/bin/mysqld --user=mysql
