@@ -13,17 +13,21 @@ if [ ! -f /var/lib/mysql/mysql ]; then
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql --rpm > /dev/null
 fi
 
-# secure installation
-# TODO fix password and maybe create database ?
+# secure installation instructions followed
+# by setup of a database which will be used by wordpress
+# https://mariadb.com/kb/en/database-for-wordpress/
 mysqld --user=mysql << _EOF_
-UPDATE mysql.user SET Password=PASSWORD('psswd') WHERE User='root';
+
+UPDATE mysql.user SET Password=PASSWORD('$MYSQL_ROOT_PWD') WHERE User='root';
+DROP DATABASE test;
 DELETE FROM mysql.user WHERE User='';
+DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 
-# TODO use variable MYSQL_USER and MYSQL_PASSWORD
+CREATE DATABASE $MYSQL_DATABASE;
+CREATE USER '$MYSQL_USER'@'localhost' IDENTIFIED BY '$MYSQL_PWD';
+GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.*TO '$MYSQL_USER'@'localhost';
 
-DROP DATABASE test;
-DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%';
 
 FLUSH PRIVILEGES;
 _EOF_

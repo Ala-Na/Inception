@@ -12,7 +12,7 @@ services:
     environment:
       MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
       MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PWD: ${MYSQL_PWD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - '3306:3306'
@@ -34,7 +34,7 @@ services:
       MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_PWD: ${WORDPRESS_DB_PWD}
       WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
       WORDPRESS_DB_CHARSET: ${WORDPRESS_DB_CHARSET}
     ports:
@@ -50,8 +50,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - /data/html:/var/www/html
-      - nginx:/etc/nginx/conf.d
+      - wordpress:/var/www/html
     ports:
       - '443:443'
     networks:
@@ -69,13 +68,6 @@ volumes:
       o: bind
       type: volume
       device: '/home/anadege42/data/db'
-  nginx:
-    name: nginx_volume
-    driver: local
-    driver_opts:
-      o: bind
-      type: volume
-      device: '/home/anadege42/data/nginx'
   wordpress:
     name: wordpress_volume
     driver: local

@@ -22,18 +22,16 @@ RUN set -e; \
 RUN mv wp-cli.phar /usr/bin/wp
 
 
-## create a user for wordpress
-#RUN adduser -Dg www-data wordpress\
-#	&& mkdir -p /var/www/wordpress \
-#	&& chown -R wordpress:www-data /var/www/wordpress \
-#	&& chmod -R o-rwx /var/www/wordpress
-
-RUN wp core download
+# create a user for wordpress
+RUN adduser -Dg wordpress wordpress\
+	&& mkdir -p /var/www/wordpress \
+	&& chown -R wordpress:wordpress /var/www/wordpress \
+	&& chmod -R o-rwx /var/www/wordpress
 
 # Copy needed configuration file
 # (www.conf to give instructions to set www poll and wp-config to configurate wp)
 COPY /conf/www.conf /etc/php7/php-fpm.d/
-COPY conf/wp-config-docker.php /conf/wp-config.php
+COPY conf/wp-config-docker.php /var/www/wordpress/wp-config.php
 
 WORKDIR /var/www/wordpress
 

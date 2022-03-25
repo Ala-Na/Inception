@@ -45,10 +45,10 @@ define( 'DB_NAME', getenv_docker('WORDPRESS_DB_NAME', 'mariadb') );
 define( 'DB_USER', getenv_docker('WORDPRESS_DB_USER', 'wordpress') );
 
 /** Database password */
-define( 'DB_PASSWORD', getenv_docker('WORDPRESS_DB_PASSWORD', '?Ran0mPa55W0Rd!') );
+define( 'DB_PASSWORD', getenv_docker('WORDPRESS_DB_PWD', '?Ran0mPa55W0Rd!') );
 
 /** Database hostname */
-define( 'DB_HOST', getenv_docker('WORDPRESS_DB_HOST', 'mariadb:9000') );
+define( 'DB_HOST', getenv_docker('WORDPRESS_DB_HOST', 'mariadb') );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', getenv_docker('WORDPRESS_DB_CHARSET', 'utf8') );
