@@ -1,69 +1,33 @@
 #!/bin/sh
 
-# http://underpop.online.fr/m/mysql/manual/mysql-programs-mysqladmin.html
-while ! mysqladmin ping -h $WORDPRESS_DB_HOST -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PWD &>/dev/null; do
-	echo "sleep"
+# Wait for mariadb to be up and running
+sleep 6
+
+echo $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PWD
+
+# Check that mariadb is up and running
+# https://stackoverflow.com/questions/30888109/shell-script-to-check-if-mysql-is-up-or-down
+# http://underpop.online.fr/m/mysql/manual/mysql-programs-mysqlWORDPRESS_ADMIN.html
+# https://stackoverflow.com/questions/25503412/how-do-i-know-when-my-docker-mysql-container-is-up-and-mysql-is-ready-for-taking
+while ! mysqladmin ping -h $WORDPRESS_DB_NAME -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PWD &>/dev/null; do
+	echo "Wordpress waiting for mysql/mariadb..."
     sleep 1
 done
 
-# set wordpress
-	#--dbuser=$WORDPRESS_DB_USER \
+# Set wordpress
 # https://make.wordpress.org/cli/handbook/how-to-install/
-#cp ./wp-config ./wp-config.php
-wp core download
 
-wp config create --dbname=$WORDPRESS_DB_NAME --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRSS_DB_PWD --dbhost=$MYSQL_DATABASE --dbcharset="utf8" --dbcollate="utf8_general_ci" --allow-root
+echo $WORDPRESS_DB_NAME $WORDPRESS_DB_PWD
 
-wp core install --url="anadege.42.fr" --title="INCEPTION" --admin_user="nimda" \
-	--admin_password=apsswdfornimda --admin_email=anadege@student.42.fr 
+if [ ! -f "wp-config.php" ]; then #wp-config.php is set at first call of config create
+	wp core download --allow-root
+	wp config create --dbname=$WORDPRESS_DB_NAME --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PWD --dbhost=$WORDPRESS_DB_NAME --dbcharset=$WORDPRESS_DB_CHARSET --allow-root
+	wp core install --url=$DOMAIN_NAME --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_ADMIN \
+		--admin_password=$WORDPRESS_ADMIN_PWD --admin_email=$WORDPRESS_ADMIN_EMAIL --skip-email
+	wp user create $WORDPRESS_USER $WORDPRESS_USER_EMAIL --user_pass=$WORDPRESS_DB_PWD --allow-root
+fi
 
-wp user create wordpress anadege@student.42.fr --role=author --user_pass='mdp' --allow-root
+echo "You can now access Wordpress"
 
+# Launch of wordpress in non daemon
 php-fpm7 --nodaemonize
-
-
-
-#if [ ! -f "wp-config.php" ]; then
-#	echo "HERE"
-#	cp ./wp-config ./wp-config.php
-
-#	sleep 5;
-#	if ! mysqladmin -h $MYSQL_DATABASE -u $MYSQL_USER \
-#		--password=$MYSQL_PWD --wait=60 ping > /dev/null; then
-#		echo "MySQL is not available.\n"
-#		exit 1
-#	fi
-#	wp core download --allow-root
-#	wp core install --url="anadege.42.fr" --title="INCEPTION" --admin_user="nimda" \
-#		--admin_password=apsswdfornimda --admin_email=anadege@student.42.fr
-
-#	wp user create $WP_USER $WP_DB_EMAIL --role=author --user_pass=$WP_USER_PWD
-
-#fi
-
-
-#echo "Wordpress started on :9000"
-#php-fpm7 --nodaemonize
-
-## TODO deete following
-##!/bin/sh
-
-## wait for mysql
-#while ! mariadb -h$MYSQL_DATABASE -u$WORDPRESS_DB_USER -p$WORDPRESS_DB_PWD $WORDPRESS_DB_NAME &>/dev/null; do
-#    sleep 3
-#done
-
-#if [ ! -f "/var/www/html/index.html" ]; then
-
-#	wp core install --allow-root
-#    wp core download --allow-root
-#    wp config create --dbname=$WORDPRESS_DB_NAME --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PWD --dbhost=$MYSQL_DATABASE --dbcharset="utf8" --dbcollate="utf8_general_ci" --allow-root
-#    wp core install --url=$DOMAIN_NAME/wordpress --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_DB_USER --admin_password=$WORDPRESS_DB_PWD --admin_email=$WORDPRESS_DB_EMAIL --skip-email --allow-root
-#    wp user create $WORDPRESS_DB_USER $WORDPRESS_DB_EMAIL --role=author --user_pass=$WORDPRESS_DB_PWD --allow-root
-
-#fi
-
-##wp redis enable --allow-root
-
-#echo "Wordpress started on :9000"
-#/usr/sbin/php-fpm7 -F -R

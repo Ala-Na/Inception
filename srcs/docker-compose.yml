@@ -10,17 +10,10 @@ services:
     volumes:
       - "db:/var/lib/mysql"
     environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PWD: ${MYSQL_PWD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PWD: ${WORDPRESS_DB_PWD}
-      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
-      WORDPRESS_DB_CHARSET: ${WORDPRESS_DB_CHARSET}
     ports:
       - '3306:3306'
     networks:
@@ -33,17 +26,21 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - "wordpress:/var/www/html"
+      - "wordpress:/var/www/wordpress"
     depends_on:
       - mariadb
     environment:
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
+      DOMAIN_NAME: ${DOMAIN_NAME}
+      WORDPRESS_TITLE: ${WORDPRESS_TITLE}
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
       WORDPRESS_DB_PWD: ${WORDPRESS_DB_PWD}
-      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
       WORDPRESS_DB_CHARSET: ${WORDPRESS_DB_CHARSET}
+      WORDPRESS_ADMIN: ${WORDPRESS_ADMIN}
+      WORDPRESS_ADMIN_PWD: ${WORDPRESS_ADMIN_PWD}
+      WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL}
+      WORDPRESS_USER: ${WORDPRESS_USER}
+      WORDPRESS_USER_EMAIL: ${WORDPRESS_USER_EMAIL}
     ports:
       - '9000:9000'
     networks:
@@ -57,7 +54,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - "wordpress:/var/www/html"
+      - "wordpress:/var/www/wordpress"
     ports:
       - '443:443'
     networks:
@@ -74,13 +71,11 @@ volumes:
     driver_opts:
       o: bind
       type: volume
-      device: '~/Desktop/Inception/data/db'
+      device: '/home/anadege/data/db'
   wordpress:
     name: wordpress_volume
     driver: local
     driver_opts:
       o: bind
       type: volume
-      device: '~/Desktop/Inception/data/wordpress'
-
-# NOTE : Be careful that directory are existing
+      device: '/home/anadege/data/wordpress'
