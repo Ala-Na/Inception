@@ -8,12 +8,19 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - db:/var/lib/mysql
+      - "db:/var/lib/mysql"
     environment:
       MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PWD: ${MYSQL_PWD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      MYSQL_ROOT_PWD: ${MYSQL_ROOT_PWD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PWD: ${WORDPRESS_DB_PWD}
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+      WORDPRESS_DB_CHARSET: ${WORDPRESS_DB_CHARSET}
     ports:
       - '3306:3306'
     networks:
@@ -26,7 +33,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - wordpress:/var/www/html
+      - "wordpress:/var/www/html"
     depends_on:
       - mariadb
     environment:
@@ -50,7 +57,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - wordpress:/var/www/html
+      - "wordpress:/var/www/html"
     ports:
       - '443:443'
     networks:
@@ -67,11 +74,13 @@ volumes:
     driver_opts:
       o: bind
       type: volume
-      device: '/home/anadege42/data/db'
+      device: '~/Desktop/Inception/data/db'
   wordpress:
     name: wordpress_volume
     driver: local
     driver_opts:
       o: bind
       type: volume
-      device: '/home/anadege42/data/wordpress'
+      device: '~/Desktop/Inception/data/wordpress'
+
+# NOTE : Be careful that directory are existing

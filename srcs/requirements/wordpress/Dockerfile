@@ -14,27 +14,36 @@ RUN set -e; \
 	apk update \
 	&& apk upgrade \
 	# installation of php submodules needed and other needed modules
-	&& apk add bash curl php-json php-phar php-fpm php-cli php-curl php-gd php-intl php-zlib php-mysqli; \
+	&& apk add bash curl php-json php-phar php-fpm php-cli php-curl php-gd php-intl php-zlib php-mysqli mariadb-client; \
 	# installation of wordpress
 	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --silent\
-	&& chmod +x wp-cli.phar 
+	&& chmod -R +x wp-cli.phar 
 	
 RUN mv wp-cli.phar /usr/bin/wp
 
 
 # create a user for wordpress
-RUN adduser -Dg wordpress wordpress\
-	&& mkdir -p /var/www/wordpress \
-	&& chown -R wordpress:wordpress /var/www/wordpress \
-	&& chmod -R o-rwx /var/www/wordpress
+#RUN adduser -Dg wordpress wordpress\
+#	&& mkdir -p /var/www/wordpress \
+#	&& chown -R wordpress:wordpress /var/www/wordpress \
+#	&& chmod -R o-rwx /var/www/wordpress
+
+RUN	adduser -S wordpress &&	addgroup -S wordpress
+COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
+COPY conf/www.conf /etc/php7/php-fpm.d/www.conf
+
+#RUN chmod a+x /var/ \
+#	&& chmod a+x /var/www/ \
+#	&& chmod a+x /var/www/wordpress
 
 # Copy needed configuration file
 # (www.conf to give instructions to set www poll and wp-config to configurate wp)
-COPY /conf/www.conf /etc/php7/php-fpm.d/
-COPY conf/wp-config-docker.php /var/www/wordpress/wp-config.php
+#COPY /conf/www.conf /etc/php7/php-fpm.d/
+COPY conf/wp-config-docker.php /var/www/wordpress/wp-config
 
 WORKDIR /var/www/wordpress
 
+#RUN wp core download
 COPY conf/entrypoint.sh /tmp/entrypoint.sh
 
 EXPOSE 9000

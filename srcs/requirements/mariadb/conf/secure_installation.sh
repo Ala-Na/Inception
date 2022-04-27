@@ -4,7 +4,6 @@
 # Adjustments principally from https://bertvv.github.io/notes-to-self/2015/11/16/automating-mysql_secure_installation/
 # and http://txt.fliglio.com/2013/11/creating-a-mysql-docker-container/
 
-
 set -o errexit # abort on nonzero existatus
 set -o nounset # abort on unbound variable
 
@@ -12,6 +11,8 @@ set -o nounset # abort on unbound variable
 if [ ! -f /var/lib/mysql/mysql ]; then
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql --rpm > /dev/null
 fi
+
+echo THERE
 
 # secure installation instructions followed
 # by setup of a database which will be used by wordpress
@@ -31,5 +32,8 @@ GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.*TO '$MYSQL_USER'@'localhost';
 
 FLUSH PRIVILEGES;
 _EOF_
+
+
+echo HERE
 
 exec /usr/bin/mysqld --user=mysql
