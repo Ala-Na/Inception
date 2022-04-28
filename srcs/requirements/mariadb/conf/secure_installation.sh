@@ -10,6 +10,7 @@ set -o nounset # abort on unbound variable
 # Initialize database
 if [ ! -f /var/lib/mysql/mysql ]; then
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql > /dev/null
+
 fi
 
 # Secure installation instructions followed by setup of a database which will be used by wordpress
@@ -20,12 +21,12 @@ mysqld --user=mysql --datadir=/var/lib/mysql --bootstrap << _EOF_
 
 FLUSH PRIVILEGES;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PWD';
-DROP DATABASE test;
+DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 
-CREATE DATABASE $MYSQL_DATABASE;
+CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;
 CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PWD';
 GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';
 

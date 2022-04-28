@@ -35,23 +35,3 @@ EXPOSE 443
 
 # Launch nginx in foreground and not background, advised for docker containers
 CMD ["nginx", "-g", "daemon off;"]
-
-#FROM alpine:3.14
-
-#RUN	apk update && apk upgrade && apk add --no-cache \
-#        nginx \
-#        openssl
-
-## nginx SSL
-#RUN mkdir -p /etc/nginx/certs
-#RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
-#        -out /etc/nginx/certs/anadege.pem \
-#        -keyout /etc/nginx/certs/anadege.key \
-#        -subj "/C=IT/ST=Rome/L=Rome/O=42 School/OU=raccoman/CN=raccoman/"
-
-## nginx config
-#RUN mkdir -p /run/nginx
-#COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
-
-## Start nginx
-#ENTRYPOINT ["nginx", "-g", "daemon off;"]

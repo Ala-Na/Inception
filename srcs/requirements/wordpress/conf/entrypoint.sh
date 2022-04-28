@@ -18,7 +18,7 @@ done
 if [ ! -f "wp-config.php" ]; then #wp-config.php is set at first call of config create
 	wp core download --allow-root
 	wp config create --dbname=$WORDPRESS_DB_NAME --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PWD --dbhost=$WORDPRESS_DB_NAME --dbcharset=$WORDPRESS_DB_CHARSET --allow-root
-	wp core install --url=$DOMAIN_NAME --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_ADMIN \
+	wp core install --url=$DOMAIN_NAME/wordpress --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_ADMIN \
 		--admin_password=$WORDPRESS_ADMIN_PWD --admin_email=$WORDPRESS_ADMIN_EMAIL --skip-email
 	wp user create $WORDPRESS_USER $WORDPRESS_USER_EMAIL --user_pass=$WORDPRESS_USER_PWD --role=author --allow-root
 fi
