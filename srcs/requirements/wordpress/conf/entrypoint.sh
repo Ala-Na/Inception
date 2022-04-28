@@ -1,9 +1,7 @@
 #!/bin/sh
 
 # Wait for mariadb to be up and running
-sleep 6
-
-echo $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PWD
+sleep 3
 
 # Check that mariadb is up and running
 # https://stackoverflow.com/questions/30888109/shell-script-to-check-if-mysql-is-up-or-down
@@ -17,17 +15,13 @@ done
 # Set wordpress
 # https://make.wordpress.org/cli/handbook/how-to-install/
 
-echo $WORDPRESS_DB_NAME $WORDPRESS_DB_PWD
-
 if [ ! -f "wp-config.php" ]; then #wp-config.php is set at first call of config create
 	wp core download --allow-root
 	wp config create --dbname=$WORDPRESS_DB_NAME --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PWD --dbhost=$WORDPRESS_DB_NAME --dbcharset=$WORDPRESS_DB_CHARSET --allow-root
 	wp core install --url=$DOMAIN_NAME --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_ADMIN \
 		--admin_password=$WORDPRESS_ADMIN_PWD --admin_email=$WORDPRESS_ADMIN_EMAIL --skip-email
-	wp user create $WORDPRESS_USER $WORDPRESS_USER_EMAIL --user_pass=$WORDPRESS_DB_PWD --allow-root
+	wp user create $WORDPRESS_USER $WORDPRESS_USER_EMAIL --user_pass=$WORDPRESS_USER_PWD --role=author --allow-root
 fi
 
 echo "You can now access Wordpress"
-
-# Launch of wordpress in non daemon
 php-fpm7 --nodaemonize

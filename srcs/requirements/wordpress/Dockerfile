@@ -18,21 +18,21 @@ RUN set -e; \
 	# installation of wordpress
 	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --silent\
 	&& chmod -R +x wp-cli.phar 
-	
-RUN mv wp-cli.phar /usr/bin/wp
+
 
 
 # create a user for wordpress
-RUN adduser -Dg wordpress wordpress \
-	&& mkdir -p /var/www/wordpress \
-	&& chown -R wordpress:wordpress /var/www/wordpress \
-	&& chmod -R o-rwx /var/www/wordpress
+RUN adduser -Dsg wordpress wordpress 
+	#&& mkdir -p /var/www/wordpress \
+	#&& chown -R wordpress:wordpress /var/www/wordpress
+	
+RUN mv wp-cli.phar /usr/bin/wp
 
 # Copy needed configuration files
 COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
 COPY conf/www.conf /etc/php7/php-fpm.d/www.conf
 
-WORKDIR /var/www/wordpress
+WORKDIR /var/www/wordpress/wordpress
 
 #RUN wp core download
 COPY conf/entrypoint.sh /tmp/entrypoint.sh
