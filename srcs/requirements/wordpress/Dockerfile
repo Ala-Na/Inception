@@ -8,7 +8,7 @@
 # https://make.wordpress.org/cli/handbook/guides/installing/
 # https://blog.linoproject.net/the-making-of-wordpress-docker-image/
 
-FROM alpine:3.14
+FROM alpine:3.15
 
 RUN set -e; \
 	apk update \
@@ -19,12 +19,8 @@ RUN set -e; \
 	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --silent\
 	&& chmod -R +x wp-cli.phar 
 
-
-
 # create a user for wordpress
 RUN adduser -Dsg wordpress wordpress 
-	#&& mkdir -p /var/www/wordpress \
-	#&& chown -R wordpress:wordpress /var/www/wordpress
 	
 RUN mv wp-cli.phar /usr/bin/wp
 
@@ -32,7 +28,7 @@ RUN mv wp-cli.phar /usr/bin/wp
 COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
 COPY conf/www.conf /etc/php7/php-fpm.d/www.conf
 
-WORKDIR /var/www/wordpress/wordpress
+WORKDIR /var/www/wordpress
 
 #RUN wp core download
 COPY conf/entrypoint.sh /tmp/entrypoint.sh

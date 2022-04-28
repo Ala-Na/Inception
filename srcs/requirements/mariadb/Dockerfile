@@ -3,7 +3,7 @@
 # and https://sysdig.com/blog/dockerfile-best-practices/
 # and https://wiki.alpinelinux.org/wiki/MariaDB
 
-FROM alpine:3.14
+FROM alpine:3.15
 
 # Creation of new group and user mysql to avoid rootless container
 RUN set -e; \
@@ -12,7 +12,7 @@ RUN set -e; \
 # Install of mariadb server and recreate files with correct permissions
 RUN apk update \
 	&& apk upgrade \
-	&& apk add vim mariadb; \
+	&& apk add vim mariadb mariadb-client; \
 	rm -rf /var/lib/apt/lists/*; \
 	# note that /var/lib/mysql is the fault directory where MySQL by default will write its data files
 	rm -rf /var/lib/mysql; \

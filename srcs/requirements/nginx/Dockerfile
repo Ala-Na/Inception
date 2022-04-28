@@ -6,7 +6,7 @@
 ## and https://faun.pub/setting-up-ssl-certificates-for-nginx-in-docker-environ-e7eec5ebb418
 ## For openssl explanations : https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
 
-FROM alpine:3.14
+FROM alpine:3.15
 
 # Install of nginx
 # Openssl need to be installed to to use TSL1.2 or TSL1.3 protocol
