@@ -31,13 +31,13 @@ conf	:
 			fi
 			
 up		:	conf
-			sudo docker-compose -f srcs/docker-compose.yml up --build
+			cd srcs && sudo docker-compose up --build
 
 up_d	:	conf
-			sudo docker-compose -f srcs/docker-compose.yml up --build -d
+			cd srcs && sudo docker-compose up --build -d
 
 down	:	
-			sudo docker-compose -f srcs/docker-compose.yml down
+			cd srcs && sudo docker-compose down
 
 clean	:	down
 			if [ -n "$(shell docker ps -a -q)" ] ; then \
