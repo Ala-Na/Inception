@@ -40,14 +40,14 @@ down	:
 			cd srcs && sudo docker-compose down
 
 clean	:	down
-			if [ -n "$(shell docker ps -a -q)" ] ; then \
-				sudo docker stop $(shell docker ps -a -q); \
+			if [ -n "$(shell sudo docker ps -a -q)" ] ; then \
+				sudo docker stop $(shell sudo docker ps -a -q); \
 			fi
 			sudo docker system prune --all --force --volumes
 			sudo docker network prune --force
 			sudo docker volume prune --force
-			if [ -n "$(shell docker volume ls -q)" ] ; then \
-				sudo docker volume rm $(shell docker volume ls -q); \
+			if [ -n "$(shell sudo docker volume ls -q)" ] ; then \
+				sudo docker volume rm $(shell sudo docker volume ls -q); \
 			fi
 			sudo docker image prune --force
 

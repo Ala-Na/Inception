@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 
 services:
   mariadb:
@@ -32,9 +32,9 @@ services:
     environment:
       DOMAIN_NAME: ${DOMAIN_NAME}
       WORDPRESS_TITLE: ${WORDPRESS_TITLE}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PWD: ${WORDPRESS_DB_PWD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PWD: ${MYSQL_PWD}
       WORDPRESS_DB_CHARSET: ${WORDPRESS_DB_CHARSET}
       WORDPRESS_ADMIN: ${WORDPRESS_ADMIN}
       WORDPRESS_ADMIN_PWD: ${WORDPRESS_ADMIN_PWD}
@@ -53,6 +53,8 @@ services:
       context: ./requirements/nginx
       dockerfile: Dockerfile
     restart: unless-stopped
+    depends_on:
+      - wordpress
     volumes:
       - "wordpress:/var/www/wordpress"
     ports:
