@@ -7,8 +7,6 @@ sleep 1
 # https://stackoverflow.com/questions/30888109/shell-script-to-check-if-mysql-is-up-or-down
 # http://underpop.online.fr/m/mysql/manual/mysql-programs-mysqlWORDPRESS_ADMIN.html
 # https://stackoverflow.com/questions/25503412/how-do-i-know-when-my-docker-mysql-container-is-up-and-mysql-is-ready-for-taking
-echo $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PWD
-
 while ! mysqladmin ping -h $WORDPRESS_DB_NAME -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PWD &>/dev/null; do
 	echo "Wordpress waiting for mysql/mariadb..."
     sleep 1
